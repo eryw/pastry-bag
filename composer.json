@@ -1,0 +1,21 @@
+{
+    "name": "eryw/pastry-bag",
+    "description": "A plugin for CakePHP 3 provides the constructor dependencies injection and the action injection",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ery Widyanto",
+            "email": "kristeryw@gmail.com"
+        }
+    ],
+    "require": {
+        "aura/di": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PastryBag\\": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}
