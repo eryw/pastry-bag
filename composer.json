@@ -1,6 +1,6 @@
 {
     "name": "eryw/pastry-bag",
-    "description": "A plugin for CakePHP 3 provides the constructor dependencies injection and the action injection",
+    "description": "A plugin for CakePHP 3 provides the constructor dependencies injection and the controller method injection",
     "type": "cakephp-plugin",
     "license": "MIT",
     "authors": [
