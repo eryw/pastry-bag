@@ -56,7 +56,7 @@ class PastryBag
      *
      * @access protected
      */
-    protected function getConfig($config)
+    protected static function getConfig($config)
     {
         if (is_string($config)) {
             $config = new $config;
