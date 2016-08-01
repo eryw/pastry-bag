@@ -1,32 +1,33 @@
 <?php
-namespace PastryBag\Routing\Filter;
+namespace PastryBag\Http;
 
 use Cake\Core\App;
-use Cake\Routing\Filter\ControllerFactoryFilter as DefaultControllerFactory;
+use Cake\Http\ControllerFactory as DefaultControllerFactory;
+use Cake\Network\Request;
+use Cake\Network\Response;
 use Cake\Utility\Inflector;
 use PastryBag\Di\PastryBag;
 
-class ControllerFactoryFilter extends DefaultControllerFactory
+class ControllerFactory extends DefaultControllerFactory
 {
-
     /**
      * {@inheritdoc}
      *
-     * @param \Cake\Network\Request $request
-     * @param \Cake\Network\Response $response
-     * @return bool|object
+     * @param \Cake\Network\Request $request The request to build a controller for.
+     * @param \Cake\Network\Response $response The response to use.
+     * @return \Cake\Controller\Controller
      */
-    protected function _getController($request, $response)
+    public function create(Request $request, Response $response)
     {
         $pluginPath = $controller = null;
         $namespace = 'Controller';
-        if (!empty($request->params['plugin'])) {
+        if (isset($request->params['plugin'])) {
             $pluginPath = $request->params['plugin'] . '.';
         }
-        if (!empty($request->params['controller'])) {
+        if (isset($request->params['controller'])) {
             $controller = $request->params['controller'];
         }
-        if (!empty($request->params['prefix'])) {
+        if (isset($request->params['prefix'])) {
             if (strpos($request->params['prefix'], '/') === false) {
                 $namespace .= '/' . Inflector::camelize($request->params['prefix']);
             } else {
@@ -38,19 +39,21 @@ class ControllerFactoryFilter extends DefaultControllerFactory
             }
         }
         $firstChar = substr($controller, 0, 1);
+
+        // Disallow plugin short forms, / and \\ from
+        // controller names as they allow direct references to
+        // be created.
         if (strpos($controller, '\\') !== false ||
             strpos($controller, '/') !== false ||
             strpos($controller, '.') !== false ||
             $firstChar === strtolower($firstChar)
         ) {
-            return false;
+            return $this->missingController($request);
         }
-        $className = false;
-        if ($pluginPath . $controller) {
-            $className = App::classname($pluginPath . $controller, $namespace, 'Controller');
-        }
+
+        $className = App::classname($pluginPath . $controller, $namespace, 'Controller');
         if (!$className) {
-            return false;
+            return $this->missingController($request);
         }
 
         $di = PastryBag::container();
