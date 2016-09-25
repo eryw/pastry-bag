@@ -1,8 +1,8 @@
 # PastryBag
 
-[![Packagist](https://img.shields.io/packagist/l/eryw/pastry-bag.svg?style=flat-square)](LICENSE)
+[![Packagist](https://img.shields.io/packagist/l/eryw/pastry-bag.svg?style=flat-square)](LICENSE.txt)
 [![Travis branch](https://img.shields.io/travis/eryw/pastry-bag/master.svg?style=flat-square)](https://travis-ci.org/eryw/pastry-bag)
-[![Packagist](https://img.shields.io/packagist/v/eryw/pastry-bag.svg?style=flat-square&label=stable)](https://packagist.org/packages/eryw/pastry-bag)
+[![Latest Stable Version](https://img.shields.io/packagist/v/eryw/pastry-bag.svg?style=flat-square&label=stable)](https://packagist.org/packages/eryw/pastry-bag)
 
 Dependencies injection plugin for CakePHP 3. This plugin provides a constructor injection and a controller action injection.
 
