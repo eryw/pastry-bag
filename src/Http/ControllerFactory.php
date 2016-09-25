@@ -2,16 +2,19 @@
 namespace PastryBag\Http;
 
 use Cake\Core\App;
-use Cake\Http\ControllerFactory as DefaultControllerFactory;
+use Cake\Http\ControllerFactory as CakeControllerFactory;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\Utility\Inflector;
 use PastryBag\Di\PastryBag;
 
-class ControllerFactory extends DefaultControllerFactory
+/**
+ * Factory method for building controllers from request/response pairs.
+ */
+class ControllerFactory extends CakeControllerFactory
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @param \Cake\Network\Request $request The request to build a controller for.
      * @param \Cake\Network\Response $response The response to use.
@@ -55,14 +58,18 @@ class ControllerFactory extends DefaultControllerFactory
         if (!$className) {
             return $this->missingController($request);
         }
+        $reflection = new \ReflectionClass($className);
+        if (!$reflection->isInstantiable()) {
+            return $this->missingController($request);
+        }
 
-        $di = PastryBag::container();
-        if (isset(class_parents($className)['PastryBag\Controller\Controller'])) {
+        $di = PastryBag::getContainer();
+        $parents = class_parents($className);
+        if (isset($parents['PastryBag\Controller\Controller'])) {
             $instance = $di->newInstance($className);
             $instance->construct($request, $response, $controller);
         } else {
-            $di->params[$className] = [$request, $response, $controller];
-            $instance = $di->newInstance($className);
+            $instance = $di->newInstance($className, ['request' => $request, 'response' => $response]);
         }
 
         return $instance;

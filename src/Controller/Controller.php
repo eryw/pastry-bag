@@ -1,16 +1,15 @@
 <?php
 namespace PastryBag\Controller;
 
-use Cake\Controller\Controller as OriginController;
+use Cake\Controller\Controller as CakeOriginalController;
 use Cake\Controller\Exception\MissingActionException;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use PastryBag\Di\PastryBag;
 
 
-class Controller extends OriginController
+class Controller extends CakeOriginalController
 {
-
     /**
      * Override original constructor with do nothing method
      */
@@ -82,7 +81,7 @@ class Controller extends OriginController
      */
     protected function resolveActionDependency()
     {
-        $di = PastryBag::container();
+        $di = PastryBag::getContainer();
         $request = $this->request;
         $reflector = new \ReflectionMethod($this, $request->params['action']);
         $parameters = $request->params['pass'];
