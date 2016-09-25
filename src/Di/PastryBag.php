@@ -3,71 +3,45 @@ namespace PastryBag\Di;
 
 use Aura\Di\Container;
 use Aura\Di\ContainerBuilder;
-use Aura\Di\ContainerConfigInterface;
 
 class PastryBag
 {
-
     /**
      * The current container instance
-     * @var Container
+     *
+     * @var \Aura\Di\Container
      */
     protected static $instance;
 
     /**
      * @param array $configClasses
-     * @return Container
+     * @return \Aura\Di\Container
      */
     public static function create(array $configClasses = [])
     {
         $builder = new ContainerBuilder();
-        $di = $builder->newInstance($builder::AUTO_RESOLVE);
-
-        foreach ($configClasses as $configClass) {
-            /** @var ContainerConfigInterface $config */
-            $config = static::getConfig($configClass);
-            $config->define($di);
-        }
+        $di = $builder->newConfiguredInstance($configClasses, $builder::AUTO_RESOLVE);
 
         return $di;
     }
 
     /**
-     * @param Container|null $instance
-     * @return Container
+     * Set the container object
+     *
+     * @param \Aura\Di\Container $container
      */
-    public static function container(Container $instance = null)
+    public static function setContainer(Container $container)
     {
-        if ($instance !== null) {
-            static::$instance = $instance;
-        }
-
-        return static::$instance;
+        static::$instance = $container;
     }
 
     /**
+     * Get the container object
      *
-     * Get config object from connfig class or return the object
-     *
-     * @param mixed $config name of class to instantiate
-     *
-     * @return Object
-     * @throws \InvalidArgumentException if invalid config
-     *
-     * @access protected
+     * @return \Aura\Di\Container
      */
-    protected static function getConfig($config)
+    public static function getContainer()
     {
-        if (is_string($config)) {
-            $config = new $config;
-        }
-
-        if (!$config instanceof ContainerConfigInterface) {
-            throw new \InvalidArgumentException(
-                'Container configs must implement ContainerConfigInterface'
-            );
-        }
-
-        return $config;
+        return static::$instance;
     }
 }
