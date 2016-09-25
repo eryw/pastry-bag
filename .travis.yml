@@ -1,0 +1,35 @@
+language: php
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - hhvm
+
+env:
+  - CAKEPHP_VERSION="3.3.*"
+  - CAKEPHP_VERSION="dev-3.next"
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 7.1
+    - php: hhvm
+    - env: CAKEPHP_VERSION="dev-3.next"
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.cache/composer
+
+before_install:
+  - COMPOSER_CACHE_DIR=$HOME/.cache/composer composer require cakephp/cakephp:${CAKEPHP_VERSION}
+
+install:
+  - COMPOSER_CACHE_DIR=$HOME/.cache/composer composer install --prefer-dist --no-interaction
+
+script:
+  - vendor/bin/phpunit -v
+
+notifications:
+  email: false
